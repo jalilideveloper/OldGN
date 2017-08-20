@@ -1,0 +1,403 @@
+﻿@using IGN.Data
+
+
+@section StyleScript
+    {
+
+}
+@section MainContent
+    {
+    <div class="container">
+
+        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 no-padding">
+
+
+            <div class="col-sm-12">
+
+
+
+                @{
+
+                    if (ViewData["MagazineSelected"] != null)
+                    {
+
+                        <div class="row margin-bottom-10">
+                            @{
+                                    greenopt_IgNewsEntities db = new greenopt_IgNewsEntities();
+
+                                    List<tblNew> myList = (List<tblNew>)ViewData["MagazineSelected"];
+                                    <div class="col-sm-6 padding-0-5">
+                                        <div class="news_box">
+                                            <div class="box_head text-align-left">
+                                                <a href="~/Home/MagazineSelected/@ViewBag.MagazineName.Replace(' ','-').ToString()">@ViewBag.MagazineName</a>
+                                            </div>
+                                            <ul>
+                                                @foreach (var inside in myList)
+                                                {
+                                                    <li>
+                                                        <a class="left" target="_blank" href="~/Home/Details/@inside.Title.Replace(' ','-').ToString()">@inside.Title</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                
+                            }
+                        </div>
+                                }
+                               else if (ViewData["CategorySelected"] != null)
+                                {
+
+                        <div class="row margin-bottom-10">
+                            @{
+                                greenopt_IgNewsEntities db = new greenopt_IgNewsEntities();
+
+                                var myList = (List<tblMagazine>)ViewData["CategorySelected"];
+
+
+                                foreach (var item in myList)
+                                {
+                                    <div class="col-sm-6 padding-0-5">
+                                        <div class="news_box">
+                                            <div class="box_head text-align-left">
+                                                <a href="~/Home/MagazineSelected/@item.MagazineName.Replace(' ','-').ToString()">@item.MagazineName</a>
+                                            </div>
+                                            <ul>
+                                                @foreach (var inside in db.tblNews.Where(i => i.MagazineID == item.MagazineID).ToList())
+                                                {
+                                                    <li>
+                                                        <a class="left" target="_blank" href="~/Home/Details/@inside.Title.Replace(' ','-').ToString()">
+                                                            @inside.Title
+                                                            @* <div class="news_source right hidden-sm hidden-xs">@inside.Descriptions</div>*@
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+
+
+                            }
+
+                        </div>
+
+                                }
+
+
+
+                                else
+                                {
+
+
+
+
+                                    greenopt_IgNewsEntities Mydb = new greenopt_IgNewsEntities();
+
+                                    var q = Mydb.tblMenus.Where(i => i.LanguageID == 1).ToList();
+                                    if (q.Count % 2 != 0)
+                                    {
+                                        for (int i = 0; i < q.Count - 1; i += 2)
+                                        {
+                                            int afterItem = i++;
+
+                                            <div class="row margin-bottom-10">
+                                                <div class="col-sm-6 padding-0-5">
+                                                    <div class="news_box">
+                                                        <div class="box_head text-align-left">
+                                                            <a href="~/Home/CategorySelected/@q[i].MenuName.Replace(' ','-').ToString()">@q[i].MenuName</a>
+                                                        </div>
+                                                        <ul>
+                                                            @foreach (var MyNews in Mydb.tblNews.Where(o => o.tblMagazine.MenuID == q[i].MenuID).ToList())
+                                                            {
+                                                                <li>
+                                                                    <div class="news_source right hidden-sm hidden-xs">@MyNews.tblMagazine.MagazineName</div>
+                                                                    <a class="left" target="_blank" href="~/Home/Details/@MyNews.Title.Replace(' ','-').ToString()">@MyNews.Title</a>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 padding-0-5">
+                                                    <div class="news_box">
+                                                        <div class="box_head text-align-left">
+                                                            <a href="~/Home/CategorySelected/@q[afterItem].MenuName.Replace(' ','-').ToString()">@q[afterItem].MenuName</a>
+                                                        </div>
+                                                        <ul>
+
+                                                            @foreach (var MyNews in Mydb.tblNews.Where(o => o.tblMagazine.MenuID == q[afterItem].MenuID).ToList())
+                                                            {
+                                                                <li>
+                                                                    <div class="news_source right hidden-sm hidden-xs">@MyNews.tblMagazine.MagazineName</div>
+                                                                    <a class="left" target="_blank" href="~/Home/Details/@MyNews.Title.Replace(' ','-').ToString()">@MyNews.Title</a>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        }
+                                        <div class="row margin-bottom-10">
+                                            <div class="col-sm-12 padding-0-5">
+                                                <div class="news_box">
+                                                    <div class="box_head text-align-left">
+                                                        <a href="~/Home/CategorySelected/@q.LastOrDefault().MenuName.Replace(' ','-').ToString()">@q.LastOrDefault().MenuName</a>
+                                                    </div>
+                                                    <ul>
+                                                        @foreach (var item in Mydb.tblNews.Where(o => o.tblMagazine.MenuID == q.LastOrDefault().MenuID).ToList())
+                                                        {
+
+                                                            <li>
+                                                                <div class="news_source right hidden-sm hidden-xs">@item.tblMagazine.MagazineName</div>
+                                                                <a class="left" target="_blank" href="~/Home/Details/@item.Title.Replace(' ','-').ToString()">@item.Title</a>
+                                                            </li>
+                                                        }
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        int afterItem = 0;
+                                        for (int i = 0; i < q.Count; i += 2)
+                                        {
+
+
+                                            <div class="row margin-bottom-10">
+                                                <div class="col-sm-6 padding-0-5">
+                                                    <div class="news_box">
+                                                        <div class="box_head text-align-left">
+                                                            <a href="~/Home/CategorySelected/@q[i].MenuName.Replace(' ','-').ToString()">@q[i].MenuName</a>
+                                                        </div>
+                                                        <ul>
+                                                            @{int MID = q[i].MenuID;}
+                                                            @foreach (var MyNews in Mydb.tblNews.Where(o => o.tblMagazine.MenuID == MID).ToList())
+                                                            {
+                                                                <li>
+                                                                    <div class="news_source right hidden-sm hidden-xs">@MyNews.tblMagazine.MagazineName</div>
+                                                                    <a class="left" target="_blank" href="~/Home/Details/@MyNews.Title.Replace(' ','-').ToString()">@MyNews.Title</a>
+                                                                </li>
+                                                            }
+
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 padding-0-5">
+                                                    <div class="news_box">
+                                                        <div class="box_head text-align-left">
+
+                                                            @{afterItem = i + 1;
+                                                            }
+                                                            <a href="~/Home/CategorySelected/@q[afterItem].MenuName.Replace(' ','-').ToString()">@q[afterItem].MenuName</a>
+                                                        </div>
+                                                        <ul>
+                                                            @{int AfterMID = q[afterItem].MenuID;}
+                                                            @foreach (var MyNews in Mydb.tblNews.Where(o => o.tblMagazine.MenuID == AfterMID).ToList())
+                                                            {
+                                                                <li>
+                                                                    <div class="news_source right hidden-sm hidden-xs">@MyNews.tblMagazine.MagazineName</div>
+                                                                    <a class="left" target="_blank" href="~/Home/Details/@MyNews.Title.Replace(' ','-').ToString()">@MyNews.Title</a>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                                            if (afterItem >= q.Count - 1)
+                                                                            {
+                                                                                break;
+                                                                            }
+                                                                        }
+                                                                    }
+
+
+
+                                                                }
+
+                }
+            </div>
+
+            <div class="content-slideshow clearfix">
+                <div class="col-sm-8">
+                    <div class="bg-shadow content-slider tab-content">
+                        <div class="content-slider-entry tab-pane" id="GRAPHICRIVER">
+                            <img src="img/envato-logos/griver.png" title="Image title" alt="alternative information">
+                            <blockquote>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </blockquote>
+                            <p>
+                                John Doe, Director at Company.
+                            </p>
+                        </div>
+                        <div class="content-slider-entry tab-pane active" id="ENVATO">
+                            <img src="img/envato-logos/envato.png" title="Image title" alt="alternative information">
+                            <blockquote>
+                                consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </blockquote>
+                            <p>
+                                Lorem ipsum, Founder and Director at Company.
+                            </p>
+                        </div>
+                        <div class="content-slider-entry tab-pane" id="THEMEFOREST">
+                            <img src="img/envato-logos/themeforest.png" title="Image title" alt="alternative information">
+                            <blockquote>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </blockquote>
+                            <p>
+                                John Doe, Director at Company.
+                            </p>
+                        </div>
+                        <div class="content-slider-entry tab-pane" id="ACTIVEDEN">
+                            <img src="img/envato-logos/activeden.png" title="Image title" alt="alternative information">
+                            <blockquote>
+                                consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </blockquote>
+                            <p>
+                                Lorem ipsum, Founder and Director at Company.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="content-slider-pager">
+                        <ul id="content-slider">
+                            <a href="#GRAPHICRIVER" data-toggle="tab">
+                                <li class="bg-shadow">GRAPHICRIVER</li>
+                            </a>
+                            <a href="#ENVATO" data-toggle="tab">
+                                <li class="bg-shadow active">ENVATO</li>
+                            </a>
+                            <a href="#THEMEFOREST" data-toggle="tab">
+                                <li class="bg-shadow">THEMEFOREST</li>
+                            </a>
+                            <a href="#ACTIVEDEN" data-toggle="tab">
+                                <li class="bg-shadow">ACTIVEDEN</li>
+                            </a>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" hidden-xs">
+                <div class="our-clients">
+                    <div class="our-client-header">
+                        <h2>OUR CLIENTS</h2>
+
+                        <div class="control-box">
+                            <a data-slide="next" href="#Ourclients" class="client-carousel-control"><i class="icon-angle-right"></i></a>
+                            <a data-slide="prev" href="#Ourclients" class="client-carousel-control"><i class="icon-angle-left"></i></a>
+                        </div>
+                    </div>
+                    <div class="our-clients-carousel">
+                        <div class="col-sm-12">
+                            <div class="carousel slide" id="Ourclients">
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <ul class="thumbnails">
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/unityb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/enterprisesb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/tvdigitalb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/changesb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Slide1 -->
+                                    <div class="item">
+                                        <ul class="thumbnails">
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/enterprisesb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/tvdigitalb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/unityb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/changesb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Slide2 -->
+                                    <div class="item">
+                                        <ul class="thumbnails">
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/unityb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/changesb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/enterprisesb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                            <li class="col-sm-3">
+                                                <a href="#">
+                                                    <img class="grayscale img-responsive" src="~/images/clients/tvdigitalb.png" title="Image title" alt="alternative information" effect="mono" inverse="true">
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 hidden-sm hidden-xs no-padding">
+            <div class="row no-padding">
+                <div class="paddingbottom5 col-lg-12 col-md-12 hidden-sm hidden-xs">
+                    <div class="paddingbottom5">
+                        <a target="_blank" href="http://www.shahrekhabar.com/ads/2198">
+                            <img src="http://www.shahrekhabar.com/swf/1499836016801.gif" alt="دیجی کالا" class="img-responsive" height="400" width="130">
+                        </a>
+                    </div>
+                    <div class="paddingbottom5">
+                        <a target="_blank" href="http://www.shahrekhabar.com/ads/2015">
+                            <img src="http://www.shahrekhabar.com/swf/1494670454104.gif" alt="نوا" class="img-responsive" height="200" width="130">
+                        </a>
+                    </div>
+                    <div class="paddingbottom5">
+                        <a target="_blank" href="http://www.shahrekhabar.com/ads/2200">
+                            <img src="http://www.shahrekhabar.com/swf/1499838999659.gif" alt="بامیلو- تیر2" class="img-responsive" height="200" width="130">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,19 @@
+﻿
+@{
+    var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
+    string cLayout = "";
+    if (controller == "Home" || controller == "home")
+    {
+        cLayout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else if (controller == "Fa" || controller == "fa")
+    {
+        cLayout = "~/Views/Shared/_LayoutFa.cshtml";
+    }
+    else if (controller == "Ar" || controller == "ar")
+    {
+        cLayout = "~/Views/Shared/_LayoutAr.cshtml";
+
+    }
+    Layout = cLayout;
+}
